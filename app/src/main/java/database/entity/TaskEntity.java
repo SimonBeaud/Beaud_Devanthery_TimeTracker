@@ -1,18 +1,22 @@
 package database.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
-@Entity(tableName = "task")
-public class TaskEntity {
-    @PrimaryKey(autoGenerate = true)
+public class TaskEntity implements Comparable{
+
+
     private Long id;
-    //private Long id_employee;
     private String Taskname;
     private String Description;
     private int StartTime;
@@ -97,24 +101,29 @@ public class TaskEntity {
 
 
     @Override
-    public boolean equals(Object obj){
-        if(obj==null) return false;
-        if(obj==this) return true;
-        if(!(obj instanceof TaskEntity)) return false;
-        TaskEntity o = (TaskEntity)  obj;
-        return  o.getId().equals(this.getId());
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof TaskEntity)) return false;
+        TaskEntity o = (TaskEntity) obj;
+        return o.getId().equals(this.getId());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return Taskname;
     }
 
-//    public Long getId_employee() {
-//        return id_employee;
-//    }
-//
-//    public void setId_employee(Long id_employee) {
-//        this.id_employee = id_employee;
-//    }
+    @Override
+    public int compareTo(@NonNull Object o) {
+        return toString().compareTo(o.toString());
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("taskname", Taskname);
+        result.put("description", Description);
+        return result;
+    }
 }

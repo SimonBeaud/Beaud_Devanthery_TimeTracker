@@ -2,18 +2,22 @@ package database.entity;
 
 import android.text.LoginFilter;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
+public class EmployeeEntity implements Comparable {
 
-@Entity(tableName = "employee")
-public class EmployeeEntity{
-    @PrimaryKey(autoGenerate = true)
     private Long id;
     private String Name;
     private String FirstName;
@@ -45,6 +49,7 @@ public class EmployeeEntity{
         this.isAdmin=isAdmin;
     }
 
+    @Exclude
     public Long getId() {
         return id;
     }
@@ -154,6 +159,21 @@ public class EmployeeEntity{
     @Override
     public String toString(){
         return Name;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        return toString().compareTo(o.toString());
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("firstName", FirstName);
+        result.put("lastName", Name);
+        result.put("email", Email);
+
+        return result;
     }
 }
 

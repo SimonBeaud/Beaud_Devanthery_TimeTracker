@@ -10,18 +10,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 
 import com.example.beaud_devanthery_timetracker.R;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import baseapp.BaseApp;
-import database.AppDataBase;
 import database.entity.EmployeeEntity;
 import database.repository.EmployeeRepository;
 import java.security.MessageDigest;

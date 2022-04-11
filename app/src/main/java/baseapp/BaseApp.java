@@ -2,7 +2,6 @@ package baseapp;
 
 import android.app.Application;
 
-import database.AppDataBase;
 import database.repository.EmployeeRepository;
 import database.repository.TaskRepository;
 
