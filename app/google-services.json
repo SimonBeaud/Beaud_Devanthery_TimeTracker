@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "901382824051",
+    "firebase_url": "https://timetrackersheet-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "timetrackersheet",
+    "storage_bucket": "timetrackersheet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901382824051:android:d4a5868a3b89f917aa8a06",
+        "android_client_info": {
+          "package_name": "com.example.beaud_devanthery_timetracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901382824051-ec6cbrgcgeu8ea1nuni5iq66bp4n88tn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdzsFRHGnLpRCiStc1Ag4g1jTjsObNBCg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901382824051-ec6cbrgcgeu8ea1nuni5iq66bp4n88tn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

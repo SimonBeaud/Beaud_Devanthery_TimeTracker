@@ -1,25 +1,20 @@
 package database.entity;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
-
-@Entity(tableName = "task")
 public class TaskEntity {
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
-    //private Long id_employee;
+    private String id;
     private String Taskname;
     private String Description;
     private int StartTime;
     private int EndTime;
     private String Date;
-    private long idEmployee;
-
+    private String idEmployee;
     public TaskEntity() {
     }
 
@@ -29,7 +24,7 @@ public class TaskEntity {
             int StartTime,
             int EndTime,
             String Date,
-            long idEmployee
+            String idEmployee
     ) {
         this.Taskname = Taskname;
         this.Description = Description;
@@ -38,12 +33,12 @@ public class TaskEntity {
         this.Date = Date;
         this.idEmployee = idEmployee;
     }
-
-    public Long getId() {
+    @Exclude
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -87,11 +82,11 @@ public class TaskEntity {
         Date = date;
     }
 
-    public long getIdEmployee() {
+    public String getIdEmployee() {
         return idEmployee;
     }
 
-    public void setIdEmployee(long idEmployee) {
+    public void setIdEmployee(String idEmployee) {
         this.idEmployee = idEmployee;
     }
 
@@ -110,11 +105,20 @@ public class TaskEntity {
         return Taskname;
     }
 
-//    public Long getId_employee() {
-//        return id_employee;
-//    }
-//
-//    public void setId_employee(Long id_employee) {
-//        this.id_employee = id_employee;
-//    }
-}
+
+    @Exclude
+    public Map<String,Object> toMap()
+    {
+        HashMap<String,Object> result = new HashMap<>();
+
+
+        result.put("Taskname",Taskname);
+        result.put("Description",Description);
+        result.put("StartTime",StartTime);
+        result.put("EndTime",EndTime);
+        result.put("Date",Date);
+        result.put("idEmployee",idEmployee);
+
+
+        return result;
+    }

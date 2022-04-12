@@ -90,7 +90,7 @@ public class CreateTaskFragment extends Fragment {
                     newTask.setStartTime(startHour*60 + startMinute);
                     newTask.setTaskname(title);
                     Date today = Calendar.getInstance().getTime();
-                    String myDate =String.format("%02d.%02d.%04d", today.getDay() , today.getMonth() , today.getYear()+1900);
+                    String myDate =String.format("%02d.%02d.%04d", today.getDate() , today.getMonth()+1 , today.getYear()+1900);
                     newTask.setDate(myDate);
                     newTask.setIdEmployee(LoginActivity.LOGGED_EMPLOYEE.getId());
 

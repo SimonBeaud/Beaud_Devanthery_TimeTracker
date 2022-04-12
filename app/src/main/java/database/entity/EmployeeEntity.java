@@ -1,20 +1,14 @@
 package database.entity;
 
 import android.text.LoginFilter;
+import com.google.firebase.database.Exclude;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
+import java.util.HashMap;
+import java.util.Map;
 
 
-
-
-@Entity(tableName = "employee")
 public class EmployeeEntity{
-    @PrimaryKey(autoGenerate = true)
-    private Long id;
+    private String id;
     private String Name;
     private String FirstName;
     private String Function;
@@ -45,11 +39,12 @@ public class EmployeeEntity{
         this.isAdmin=isAdmin;
     }
 
-    public Long getId() {
+    @Exclude
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -154,6 +149,26 @@ public class EmployeeEntity{
     @Override
     public String toString(){
         return Name;
+    }
+
+    @Exclude
+    public Map<String,Object> toMap()
+    {
+        HashMap<String,Object> result = new HashMap<>();
+
+        result.put("name",Name);
+        result.put("firstName",FirstName);
+        result.put("function",Function);
+        result.put("telNumber",Telnumber);
+        result.put("email",Email);
+        result.put("address",Address);
+        result.put("NPA",NPA);
+        result.put("image_url",Image_Url);
+        result.put("username",Username);
+        result.put("password",Password);
+        result.put("isAdmin",isAdmin);
+
+        return result;
     }
 }
 
