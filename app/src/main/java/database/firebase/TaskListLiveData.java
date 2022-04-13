@@ -53,6 +53,7 @@ public class TaskListLiveData extends LiveData<List<TaskEntity>> {
         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
             TaskEntity entity = childSnapshot.getValue(TaskEntity.class);
             entity.setId(childSnapshot.getKey());
+
             tasks.add(entity);
         }
         return tasks;

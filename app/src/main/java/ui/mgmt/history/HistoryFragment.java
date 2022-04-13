@@ -72,9 +72,9 @@ public class HistoryFragment extends Fragment {
         TaskListViewModel.Factory factory = new TaskListViewModel.Factory(
                 getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
         viewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) factory).get(TaskListViewModel.class);
-        viewModel.getOwnTasks().observe(getViewLifecycleOwner(), accountEntities -> {
-            if (accountEntities != null) {
-                myListOfTasks = accountEntities;
+        viewModel.getOwnTasks().observe(getViewLifecycleOwner(), taskEntities -> {
+            if (taskEntities != null) {
+                myListOfTasks = taskEntities;
 
 //                myAdapter.setData(myListOfTasks);
 

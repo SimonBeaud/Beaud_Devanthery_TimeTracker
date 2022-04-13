@@ -1,14 +1,21 @@
 package database.repository;
 
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+import java.util.concurrent.Executor;
 
 import database.entity.EmployeeEntity;
 import database.firebase.EmployeeTasksListLiveData;
@@ -19,6 +26,8 @@ import util.OnAsyncEventListener;
 public class EmployeeRepository {
 
     private static EmployeeRepository instance;
+    private FirebaseAuth mAuth;
+
 
     public static EmployeeRepository getInstance() {
         if (instance == null) {
@@ -54,9 +63,15 @@ public class EmployeeRepository {
                 .getReference("employees");
         return new EmployeeTasksListLiveData(reference, owner);
     }
+
+
+
+    private void updateUI(Object o) {
+    }
+
     public void register(final EmployeeEntity employee, final OnAsyncEventListener callback) {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                employee.getUsername(),
+                employee.getEmail(),
                 employee.getPassword()
         ).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -71,9 +86,9 @@ public class EmployeeRepository {
 
     //Insertion d'un employée
     public void insert(final EmployeeEntity employee, OnAsyncEventListener callback){
-        String id = FirebaseDatabase.getInstance().getReference("employees").push().getKey();
+        //String id = FirebaseDatabase.getInstance().getReference("employees").push().getKey();
         FirebaseDatabase.getInstance().getReference("employees")
-                .child(id)
+                .child(employee.getId())
                 .setValue(employee, (databaseError,databaseReference)->{
                     if(databaseError!= null) {
                         callback.onFailure(databaseError.toException());
