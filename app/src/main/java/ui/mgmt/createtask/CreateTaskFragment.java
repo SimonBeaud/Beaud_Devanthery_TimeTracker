@@ -22,20 +22,22 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
-import database.async.employee.CreateEmployee;
-import database.async.task.CreateTask;
+import baseapp.BaseApp;
 import database.entity.TaskEntity;
+import database.repository.TaskRepository;
 import ui.mgmt.LoginActivity;
 import util.OnAsyncEventListener;
 
 public class CreateTaskFragment extends Fragment {
 
     private FragmentCreatetaskBinding binding;
+    private TaskRepository repository;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-
+        repository = ((BaseApp) getActivity().getApplication()).getTaskRepository();
         //link with the xml file view
         binding = FragmentCreatetaskBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -99,7 +101,7 @@ public class CreateTaskFragment extends Fragment {
                     ////////////////////////////////////////////////////////////////////
                     //// add the task in database
                     ////////////////////////////////////////////////////////////////////
-                    new CreateTask(getActivity().getApplication(), new OnAsyncEventListener() {
+                    repository.insert(newTask ,new OnAsyncEventListener() {
 
                         @Override
                         public void onSuccess() {
@@ -110,7 +112,8 @@ public class CreateTaskFragment extends Fragment {
                         public void onFailure(Exception e) {
                             Log.w( "createTask" , "failed");
                         }
-                    }).execute(newTask);
+                    }
+                    );
                 }
 
 

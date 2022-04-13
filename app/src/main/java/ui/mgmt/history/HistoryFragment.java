@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.FragmentHistoryBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import database.repository.EmployeeRepository;
 import database.repository.TaskRepository;
 import ui.mgmt.LoginActivity;
 import ui.mgmt.MainActivity;
+import viewmodel.tasks.TaskListViewModel;
 
 
 public class HistoryFragment extends Fragment {
@@ -45,6 +47,8 @@ public class HistoryFragment extends Fragment {
     List<TaskEntity> myListOfTasks;
 
     private TaskRepository repository;
+
+    private TaskListViewModel viewModel;
 
 
 
@@ -65,27 +69,29 @@ public class HistoryFragment extends Fragment {
         myListOfTasks = new ArrayList<>();
         myAdapter = new TaskAdapter(getActivity().getBaseContext(),R.layout.history_task_fragment,myListOfTasks,inflater,getActivity().getApplication(),root.getContext(),getParentFragmentManager());
         list.setAdapter(myAdapter);
+        TaskListViewModel.Factory factory = new TaskListViewModel.Factory(
+                getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+        viewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) factory).get(TaskListViewModel.class);
+        viewModel.getOwnTasks().observe(getViewLifecycleOwner(), accountEntities -> {
+            if (accountEntities != null) {
+                myListOfTasks = accountEntities;
+                myAdapter.setData(myListOfTasks);
 
-        //request the list of tasks of the employee in the db
-        repository.getTasksOfEmployee(getActivity().getApplication(),LoginActivity.LOGGED_EMPLOYEE.getId()).observe(getActivity(), taskEntities -> {
-            if (taskEntities != null) {
-                //free the list to avoid double values
-                myListOfTasks.clear();
-
-
-                for(int i=0;i<taskEntities.size();i++)
-                {
-
-                    myListOfTasks.add(taskEntities.get(i));
-                }
-
-                //set an adapter to the list to display the tasks, and make them clickable
+                //perhaps it is this ?
                 list.setAdapter(myAdapter);
 
-            } else {
-                Log.i("history","no tasks in database!");
-            }
-        });
+
+                ///////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////
+
+                // setData in adapter ? modify the adapter later
+
+                ///////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////
+            }});
+
+
+
         return root;
     }
 

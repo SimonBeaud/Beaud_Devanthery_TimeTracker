@@ -10,15 +10,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.beaud_devanthery_timetracker.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
+import baseapp.BaseApp;
 import database.entity.TaskEntity;
 import ui.mgmt.MyAlertDialog;
 import util.OnAsyncEventListener;
+import viewmodel.tasks.TaskListViewModel;
+import viewmodel.tasks.TaskViewModel;
 
 
 public class TaskAdapter extends ArrayAdapter<TaskEntity> {
@@ -34,6 +39,7 @@ public class TaskAdapter extends ArrayAdapter<TaskEntity> {
     private final LayoutInflater inflater;
     private final Application app;
     private final FragmentManager fragmentManager;
+    private TaskViewModel viewModel;
 
     public TaskAdapter(Context context, int layoutResourceId, List<TaskEntity> items, LayoutInflater inflater , Application app, Context fragmentContext, FragmentManager fragmentManager) {
         super(context, layoutResourceId, items);
@@ -105,6 +111,22 @@ public class TaskAdapter extends ArrayAdapter<TaskEntity> {
                 Log.println(Log.WARN,"DELETE PUSHED ",holder.task.getTaskname()+" asked to be deleted");
                 TaskEntity itemToRemove = (TaskEntity) view.getTag();
 
+                ///////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////////
+                /////////////////////   try to delete the item when clicked ///////
+                ///////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////////////////////////
+
+
+//                TaskListViewModel.Factory factory = new TaskListViewModel.Factory(
+//                        app, FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                viewModel = new ViewModelProvider(, factory).get(AccountListViewModel.class);
+//                viewModel.getOwnAccounts().observe(this, accountEntities -> {
+//                    if (accountEntities != null) {
+//                        accounts = accountEntities;
+//                        adapter.setData(accounts);
+//                    }
+//                });
 
 
                 new DeleteTask(app, new OnAsyncEventListener() {
