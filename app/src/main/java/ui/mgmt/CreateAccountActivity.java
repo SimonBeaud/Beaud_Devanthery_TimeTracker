@@ -14,13 +14,10 @@ import com.example.beaud_devanthery_timetracker.R;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
 import baseapp.BaseApp;
-import database.AppDataBase;
 import database.async.employee.CreateEmployee;
 import database.dao.EmployeeDao;
 import database.entity.EmployeeEntity;

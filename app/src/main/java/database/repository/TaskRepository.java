@@ -1,6 +1,7 @@
 package database.repository;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -15,30 +16,35 @@ import database.firebase.EmployeeListLiveData;
 import database.firebase.EmployeeLiveData;
 import database.firebase.TaskListLiveData;
 import database.firebase.TaskLiveData;
+import database.firebase.TaskEmployeeListLiveData;
+import database.firebase.TaskLiveData;
 import util.OnAsyncEventListener;
 
 public class TaskRepository {
 
+    private static final String TAG = "ClientRepository";
 
     private static TaskRepository instance;
 
-    private TaskRepository(){
-
+    private TaskRepository() {
     }
 
-    public static TaskRepository getInstance(){
-        if(instance==null){
-            synchronized (TaskRepository.class){
-                if(instance==null){
-                    instance= new TaskRepository();
+    public static TaskRepository getInstance() {
+        if (instance == null) {
+            synchronized (TaskRepository.class) {
+                if (instance == null) {
+                    instance = new TaskRepository();
                 }
             }
         }
         return instance;
     }
 
-
-    //Get des taches
+    public void signIn(final String email, final String password,
+                       final OnCompleteListener<AuthResult> listener) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(listener);
+    }
 
     public LiveData<TaskEntity> getTask(final String taskId){
         DatabaseReference reference = FirebaseDatabase.getInstance()
