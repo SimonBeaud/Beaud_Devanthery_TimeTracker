@@ -6,6 +6,10 @@ plugins {
 android {
     compileSdk 32
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     defaultConfig {
         applicationId "com.example.beaud_devanthery_timetracker"
         minSdk 28

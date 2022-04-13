@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beaud_devanthery_timetracker.R;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 import java.security.MessageDigest;
@@ -104,7 +105,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         //Check email format and set email if is valid
         if(CheckConditions()){
 
-            repository.insert(employee,new OnAsyncEventListener() {
+            repository.register(employee,new OnAsyncEventListener() {
 
                 @Override
                 public void onSuccess() {
@@ -117,6 +118,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                     backLogin();
                 }
             });
+
+
 
             Toast.makeText(getApplicationContext(), "New account added to database", Toast.LENGTH_SHORT).show();
             backLogin();

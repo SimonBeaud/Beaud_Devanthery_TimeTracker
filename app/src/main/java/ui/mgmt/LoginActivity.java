@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.example.beaud_devanthery_timetracker.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -111,29 +112,42 @@ public class LoginActivity extends AppCompatActivity {
         }else{
             String finalEncryptedPassword = encryptedPassword;
 
-            repository.getEmployee(stUsername).observe(LoginActivity.this, employeeEntity -> {
-                if (employeeEntity != null) {
-                    if (employeeEntity.getPassword().equals(finalEncryptedPassword)) {
-                        SharedPreferences.Editor editor = getSharedPreferences(MainActivity.PREFS_NAME, 0).edit();
-                        editor.putString(MainActivity.PREFS_USER, employeeEntity.getUsername());
-                        editor.apply();
-
-                        LOGGED_EMPLOYEE = employeeEntity;
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        Username.setText("");
-                        Password.setText("");
-                    } else {
-                        Password.setError(getString(R.string.error_incorrect_password));
-                        Password.requestFocus();
-                        Password.setText("");
-                    }
-                } else {
-                    Username.setError(getString(R.string.error_invalid_username));
-                    Username.requestFocus();
+            repository.signIn(stUsername, finalEncryptedPassword, task -> {
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                     Username.setText("");
+                    Password.setText("");
+                } else {
+                    Username.setError("invalid combinaison");
+                    Username.requestFocus();
+                    Password.setText("");
                 }
             });
+
+//            repository.getEmployee(stUsername).observe(LoginActivity.this, employeeEntity -> {
+//                if (employeeEntity != null) {
+//                    if (employeeEntity.getPassword().equals(finalEncryptedPassword)) {
+//                        SharedPreferences.Editor editor = getSharedPreferences(MainActivity.PREFS_NAME, 0).edit();
+//                        editor.putString(MainActivity.PREFS_USER, employeeEntity.getUsername());
+//                        editor.apply();
+//
+//                        LOGGED_EMPLOYEE = employeeEntity;
+//                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                        startActivity(intent);
+//                        Username.setText("");
+//                        Password.setText("");
+//                    } else {
+//                        Password.setError(getString(R.string.error_incorrect_password));
+//                        Password.requestFocus();
+//                        Password.setText("");
+//                    }
+//                } else {
+//                    Username.setError(getString(R.string.error_invalid_username));
+//                    Username.requestFocus();
+//                    Username.setText("");
+//                }
+//            });
         }
     }
 

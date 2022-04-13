@@ -2,6 +2,9 @@ package database.repository;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,6 +31,13 @@ public class EmployeeRepository {
         return instance;
     }
 
+    public void signIn(final String email, final String password,
+                       final OnCompleteListener<AuthResult> listener) {
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(listener);
+    }
+
+
 
     //Get des employées
     public LiveData<EmployeeEntity> getEmployee(final String employeeId){
@@ -44,6 +54,20 @@ public class EmployeeRepository {
                 .getReference("employees");
         return new EmployeeTasksListLiveData(reference, owner);
     }
+    public void register(final EmployeeEntity employee, final OnAsyncEventListener callback) {
+        FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                employee.getUsername(),
+                employee.getPassword()
+        ).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                employee.setId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                insert(employee, callback);
+            } else {
+                callback.onFailure(task.getException());
+            }
+        });
+    }
+
 
     //Insertion d'un employée
     public void insert(final EmployeeEntity employee, OnAsyncEventListener callback){

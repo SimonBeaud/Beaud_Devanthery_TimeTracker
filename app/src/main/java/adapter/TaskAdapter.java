@@ -20,6 +20,7 @@ import java.util.List;
 
 import baseapp.BaseApp;
 import database.entity.TaskEntity;
+import database.repository.TaskRepository;
 import ui.mgmt.MyAlertDialog;
 import util.OnAsyncEventListener;
 import viewmodel.tasks.TaskListViewModel;
@@ -127,9 +128,8 @@ public class TaskAdapter extends ArrayAdapter<TaskEntity> {
 //                        adapter.setData(accounts);
 //                    }
 //                });
-
-
-                new DeleteTask(app, new OnAsyncEventListener() {
+                TaskRepository repository = ((BaseApp)app).getTaskRepository();
+                repository.delete(itemToRemove,new OnAsyncEventListener() {
 
                     @Override
                     public void onSuccess() {
@@ -140,7 +140,9 @@ public class TaskAdapter extends ArrayAdapter<TaskEntity> {
                     public void onFailure(Exception e) {
                         System.out.println("La task ne s'est pas supprimée");
                     }
-                }).execute(itemToRemove);
+                });
+
+
                 remove(itemToRemove);
 
 
