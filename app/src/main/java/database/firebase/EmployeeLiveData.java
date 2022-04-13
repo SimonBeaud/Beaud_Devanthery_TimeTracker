@@ -13,15 +13,13 @@ import com.google.firebase.database.ValueEventListener;
 import database.entity.EmployeeEntity;
 
 public class EmployeeLiveData extends LiveData<EmployeeEntity> {
-    private static final String TAG = "AccountLiveData";
+    private static final String TAG = "EmployeeLiveData";
 
     private final DatabaseReference reference;
-    private final String owner;
-    private final EmployeeLiveData.MyValueEventListener listener = new EmployeeLiveData.MyValueEventListener();
+    private final MyValueEventListener listener = new MyValueEventListener();
 
     public EmployeeLiveData(DatabaseReference ref) {
-        reference = ref;
-        owner = ref.getParent().getParent().getKey();
+        this.reference = ref;
     }
 
     @Override
@@ -38,10 +36,12 @@ public class EmployeeLiveData extends LiveData<EmployeeEntity> {
     private class MyValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            EmployeeEntity entity = dataSnapshot.getValue(EmployeeEntity.class);
-            entity.setId(dataSnapshot.getKey());
-            entity.setOwner(owner);
-            setValue(entity);
+            if (dataSnapshot.exists()) {
+                EmployeeEntity entity = dataSnapshot.getValue(EmployeeEntity.class);
+                entity.setId(dataSnapshot.getKey());
+                setValue(entity);
+
+            }
         }
 
         @Override

@@ -1,7 +1,6 @@
 package database.repository;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -10,13 +9,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
-import baseapp.BaseApp;
 import database.entity.TaskEntity;
-import database.firebase.EmployeeListLiveData;
-import database.firebase.EmployeeLiveData;
 import database.firebase.TaskListLiveData;
-import database.firebase.TaskLiveData;
-import database.firebase.TaskEmployeeListLiveData;
 import database.firebase.TaskLiveData;
 import util.OnAsyncEventListener;
 
@@ -39,12 +33,17 @@ public class TaskRepository {
         }
         return instance;
     }
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//////////////////A DISCUTER////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
-    public void signIn(final String email, final String password,
-                       final OnCompleteListener<AuthResult> listener) {
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(listener);
-    }
+//    public void signIn(final String email, final String password,
+//                       final OnCompleteListener<AuthResult> listener) {
+//        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+//                .addOnCompleteListener(listener);
+//    }
 
     public LiveData<TaskEntity> getTask(final String taskId){
         DatabaseReference reference = FirebaseDatabase.getInstance()
@@ -55,14 +54,14 @@ public class TaskRepository {
 
     }
 
-    public LiveData<List<TaskEntity>> getTaks(Application application){
+    public LiveData<List<TaskEntity>> getTasks(){
         DatabaseReference reference = FirebaseDatabase.getInstance()
                 .getReference("tasks");
 
         return new TaskListLiveData(reference);
     }
 
-    public LiveData<List<TaskEntity>> getTasksOfEmployee(Application application , long employeeId){
+    public LiveData<List<TaskEntity>> getTasksOfEmployee( String employeeId){
         DatabaseReference reference = FirebaseDatabase.getInstance()
                 .getReference("tasks");
 ///////////////////////////////////////////////////////////////////////

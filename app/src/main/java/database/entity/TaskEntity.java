@@ -15,6 +15,7 @@ public class TaskEntity {
     private int EndTime;
     private String Date;
     private String idEmployee;
+
     public TaskEntity() {
     }
 
@@ -33,6 +34,7 @@ public class TaskEntity {
         this.Date = Date;
         this.idEmployee = idEmployee;
     }
+
     @Exclude
     public String getId() {
         return id;
@@ -92,33 +94,33 @@ public class TaskEntity {
 
 
     @Override
-    public boolean equals(Object obj){
-        if(obj==null) return false;
-        if(obj==this) return true;
-        if(!(obj instanceof TaskEntity)) return false;
-        TaskEntity o = (TaskEntity)  obj;
-        return  o.getId().equals(this.getId());
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof TaskEntity)) return false;
+        TaskEntity o = (TaskEntity) obj;
+        return o.getId().equals(this.getId());
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return Taskname;
     }
 
 
     @Exclude
-    public Map<String,Object> toMap()
-    {
-        HashMap<String,Object> result = new HashMap<>();
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
 
 
-        result.put("Taskname",Taskname);
-        result.put("Description",Description);
-        result.put("StartTime",StartTime);
-        result.put("EndTime",EndTime);
-        result.put("Date",Date);
-        result.put("idEmployee",idEmployee);
+        result.put("Taskname", Taskname);
+        result.put("Description", Description);
+        result.put("StartTime", StartTime);
+        result.put("EndTime", EndTime);
+        result.put("Date", Date);
+        result.put("idEmployee", idEmployee);
 
 
         return result;
     }
+}

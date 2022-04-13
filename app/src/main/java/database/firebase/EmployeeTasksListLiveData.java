@@ -1,9 +1,8 @@
 package database.firebase;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,18 +16,21 @@ import database.entity.EmployeeEntity;
 import database.entity.TaskEntity;
 import database.pojo.EmployeeWithTask;
 
-public class TaskEmployeeListLiveData extends LiveData<List<EmployeeWithTask>> {
+
+public class EmployeeTasksListLiveData extends LiveData<List<EmployeeWithTask>> {
+
     private static final String TAG = "ClientAccountsLiveData";
 
     private final DatabaseReference reference;
     private final String owner;
-    private final TaskEmployeeListLiveData.MyValueEventListener listener =
-            new TaskEmployeeListLiveData.MyValueEventListener();
+    private final MyValueEventListener listener =
+            new MyValueEventListener();
 
-    public TaskEmployeeListLiveData(DatabaseReference ref, String owner) {
+    public EmployeeTasksListLiveData(DatabaseReference ref, String owner) {
         reference = ref;
         this.owner = owner;
     }
+
 
     @Override
     protected void onActive() {
@@ -44,7 +46,7 @@ public class TaskEmployeeListLiveData extends LiveData<List<EmployeeWithTask>> {
     private class MyValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            setValue(toClientWithAccountsList(dataSnapshot));
+            setValue(toEmployeeWithTasksList(dataSnapshot));
         }
 
         @Override
@@ -53,14 +55,14 @@ public class TaskEmployeeListLiveData extends LiveData<List<EmployeeWithTask>> {
         }
     }
 
-    private List<EmployeeWithTask> toClientWithAccountsList(DataSnapshot snapshot) {
+    private List<EmployeeWithTask> toEmployeeWithTasksList(DataSnapshot snapshot) {
         List<EmployeeWithTask> clientWithAccountsList = new ArrayList<>();
         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
             if (!childSnapshot.getKey().equals(owner)) {
                 EmployeeWithTask employeeWithTask = new EmployeeWithTask();
-                employeeWithTask.task = childSnapshot.getValue(TaskEntity.class);
-                employeeWithTask.task.setId(childSnapshot.getKey());
-                employeeWithTask.employee = toAccounts(childSnapshot.child("accounts"),
+                employeeWithTask.employee = childSnapshot.getValue(EmployeeEntity.class);
+                employeeWithTask.employee.setId(childSnapshot.getKey());
+                employeeWithTask.tasks = toTasks(childSnapshot.child("tasks"),
                         childSnapshot.getKey());
                 clientWithAccountsList.add(employeeWithTask);
             }
@@ -68,12 +70,12 @@ public class TaskEmployeeListLiveData extends LiveData<List<EmployeeWithTask>> {
         return clientWithAccountsList;
     }
 
-    private List<EmployeeEntity> toAccounts(DataSnapshot snapshot, String ownerId) {
-        List<EmployeeEntity> accounts = new ArrayList<>();
+    private List<TaskEntity> toTasks(DataSnapshot snapshot, String ownerId) {
+        List<TaskEntity> accounts = new ArrayList<>();
         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-            EmployeeEntity entity = childSnapshot.getValue(EmployeeEntity.class);
+            TaskEntity entity = childSnapshot.getValue(TaskEntity.class);
             entity.setId(childSnapshot.getKey());
-            entity.setOwner(ownerId);
+            entity.setIdEmployee(ownerId);
             accounts.add(entity);
         }
         return accounts;

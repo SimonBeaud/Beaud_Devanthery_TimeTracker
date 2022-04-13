@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beaud_devanthery_timetracker.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.security.NoSuchAlgorithmException;
 
@@ -32,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonLogin;
     private EditText Username, Password;
     private ProgressBar progressBar;
-    private AppDataBase database;
+    private FirebaseAuth mAuth;
 
     private EmployeeRepository repository;
 
@@ -41,12 +43,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        database = AppDataBase.getInstance(this.getBaseContext());
+        mAuth = FirebaseAuth.getInstance();
         repository = ((BaseApp)getApplication()).getEmployeeRepository();
         Username =  findViewById(R.id.editTextTextEmailAddress);
         Password = findViewById(R.id.editTextTextPassword);
 
+
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
     }
 

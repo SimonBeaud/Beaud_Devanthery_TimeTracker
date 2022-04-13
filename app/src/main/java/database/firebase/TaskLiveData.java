@@ -10,13 +10,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import database.entity.EmployeeEntity;
 import database.entity.TaskEntity;
 
 public class TaskLiveData extends LiveData<TaskEntity> {
-    private static final String TAG = "ClientLiveData";
+    private static final String TAG = "TaskLiveData";
 
     private final DatabaseReference reference;
-    private final TaskLiveData.MyValueEventListener listener = new TaskLiveData.MyValueEventListener();
+    private final MyValueEventListener listener = new MyValueEventListener();
 
     public TaskLiveData(DatabaseReference ref) {
         this.reference = ref;
@@ -36,9 +37,12 @@ public class TaskLiveData extends LiveData<TaskEntity> {
     private class MyValueEventListener implements ValueEventListener {
         @Override
         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-            TaskEntity entity = dataSnapshot.getValue(TaskEntity.class);
-            entity.setId(dataSnapshot.getKey());
-            setValue(entity);
+            if (dataSnapshot.exists()) {
+                TaskEntity entity = dataSnapshot.getValue(TaskEntity.class);
+                entity.setId(dataSnapshot.getKey());
+                setValue(entity);
+
+            }
         }
 
         @Override

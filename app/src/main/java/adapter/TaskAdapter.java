@@ -16,7 +16,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import database.async.task.DeleteTask;
 import database.entity.TaskEntity;
 import ui.mgmt.MyAlertDialog;
 import util.OnAsyncEventListener;
@@ -105,6 +104,8 @@ public class TaskAdapter extends ArrayAdapter<TaskEntity> {
             public void onClick(View view) {
                 Log.println(Log.WARN,"DELETE PUSHED ",holder.task.getTaskname()+" asked to be deleted");
                 TaskEntity itemToRemove = (TaskEntity) view.getTag();
+
+
 
                 new DeleteTask(app, new OnAsyncEventListener() {
 

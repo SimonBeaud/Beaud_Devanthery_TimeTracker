@@ -1,16 +1,6 @@
 package database.repository;
 
-import android.app.Application;
-
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -18,8 +8,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.List;
 
 import database.entity.EmployeeEntity;
-import database.firebase.EmployeeListLiveData;
+import database.firebase.EmployeeTasksListLiveData;
 import database.firebase.EmployeeLiveData;
+import database.pojo.EmployeeWithTask;
 import util.OnAsyncEventListener;
 
 public class EmployeeRepository {
@@ -47,11 +38,11 @@ public class EmployeeRepository {
         return new EmployeeLiveData(reference);
     }
 
-    public LiveData<List<EmployeeEntity>> getEmployees(){
+
+    public LiveData<List<EmployeeWithTask>> getOtherEmployeesWithTasks(final String owner) {
         DatabaseReference reference = FirebaseDatabase.getInstance()
                 .getReference("employees");
-
-        return new EmployeeListLiveData(reference);
+        return new EmployeeTasksListLiveData(reference, owner);
     }
 
     //Insertion d'un employée
@@ -85,28 +76,34 @@ public class EmployeeRepository {
                     }
                 });
     }
-    public void transaction(final EmployeeEntity sender, final EmployeeEntity recipient,
-                            OnAsyncEventListener callback) {
-        final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
-        rootReference.runTransaction(new Transaction.Handler() {
-            @NonNull
-            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                rootReference
-                        .child("clients")
-                        .child(sender.getOwner())
-                        .child("accounts")
-                        .child(sender.getId())
-                        .updateChildren(sender.toMap());
 
-                rootReference
-                        .child("clients")
-                        .child(recipient.getOwner())
-                        .child("accounts")
-                        .child(recipient.getId())
-                        .updateChildren(recipient.toMap());
-
-                return Transaction.success(mutableData);
-            }
+    /////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//////////////////A DISCUTER////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//    public void transaction(final EmployeeEntity sender, final EmployeeEntity recipient,
+//                            OnAsyncEventListener callback) {
+//        final DatabaseReference rootReference = FirebaseDatabase.getInstance().getReference();
+//        rootReference.runTransaction(new Transaction.Handler() {
+//            @NonNull
+//            public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+//                rootReference
+//                        .child("clients")
+//                        .child(sender.getOwner())
+//                        .child("accounts")
+//                        .child(sender.getId())
+//                        .updateChildren(sender.toMap());
+//
+//                rootReference
+//                        .child("clients")
+//                        .child(recipient.getOwner())
+//                        .child("accounts")
+//                        .child(recipient.getId())
+//                        .updateChildren(recipient.toMap());
+//
+//                return Transaction.success(mutableData);
+//            }
 
     //Update d'un employée
     public void update(final EmployeeEntity employee, OnAsyncEventListener callback){
@@ -120,17 +117,21 @@ public class EmployeeRepository {
                         callback.onSuccess();
                     }
                 });
-
-            @Override
-            public void onComplete(DatabaseError databaseError, boolean b,
-                                   DataSnapshot dataSnapshot) {
-                if (databaseError != null) {
-                    callback.onFailure(databaseError.toException());
-                } else {
-                    callback.onSuccess();
-                }
-            }
-        });
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//////////////////A DISCUTER////////////////////////
+/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
+//            @Override
+//            public void onComplete(DatabaseError databaseError, boolean b,
+//                                   DataSnapshot dataSnapshot) {
+//                if (databaseError != null) {
+//                    callback.onFailure(databaseError.toException());
+//                } else {
+//                    callback.onSuccess();
+//                }
+//            }
+//        });
     }
 
 
