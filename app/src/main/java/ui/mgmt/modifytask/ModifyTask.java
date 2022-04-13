@@ -17,9 +17,10 @@ import android.view.ViewGroup;
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.ModifyTaskFragmentBinding;
 
-import database.async.employee.UpdateEmployee;
-import database.async.task.UpdateTask;
+import baseapp.BaseApp;
 import database.entity.TaskEntity;
+import database.repository.EmployeeRepository;
+import database.repository.TaskRepository;
 import ui.mgmt.LoginActivity;
 import ui.mgmt.history.HistoryFragment;
 import util.OnAsyncEventListener;
@@ -27,14 +28,17 @@ import util.OnAsyncEventListener;
 public class ModifyTask extends Fragment {
 
     private ModifyTaskFragmentBinding binding;
+    private TaskRepository repository;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        repository = ((BaseApp) getActivity().getApplication()).getTaskRepository();
+
         //get the arguments that were sent in input
         Bundle arguments = getArguments();
-        long id = (Long)arguments.get("idTask");
+        String id = (String)arguments.get("idTask");
         String title = (String)arguments.get("title");
         String description = (String)arguments.get("description");
         String date = (String)arguments.get("date");
@@ -93,7 +97,7 @@ public class ModifyTask extends Fragment {
 
 
                 //modify in db
-                new UpdateTask(getActivity().getApplication(), new OnAsyncEventListener() {
+                repository.update(task,new OnAsyncEventListener() {
 
                     @Override
                     public void onSuccess() {
@@ -104,7 +108,7 @@ public class ModifyTask extends Fragment {
                     public void onFailure(Exception e) {
                         Log.w("ModifyTask" , "failed");
                     }
-                }).execute(task);
+                });
 
                 switchToHistory();
 

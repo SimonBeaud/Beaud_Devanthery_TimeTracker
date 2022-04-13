@@ -13,17 +13,24 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.FragmentProfileBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
+import baseapp.BaseApp;
 import database.entity.EmployeeEntity;
+import database.repository.EmployeeRepository;
 import ui.mgmt.LoginActivity;
 import ui.mgmt.MyAlertDialog;
 import ui.mgmt.modifyemployee.ModifyEmployee;
 import ui.mgmt.modifytask.ModifyTask;
+import viewmodel.employees.EmployeeViewModel;
 
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private EmployeeRepository repository;
+    private EmployeeViewModel viewModel;
+    private EmployeeEntity employee;
 
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,15 +38,24 @@ public class ProfileFragment extends Fragment {
         //link with the xml file view
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
+        repository = ((BaseApp) getActivity().getApplication()).getEmployeeRepository();
         //get the employee that is logged
-        EmployeeEntity myProfile = LoginActivity.LOGGED_EMPLOYEE;
+        EmployeeViewModel.Factory factory = new EmployeeViewModel.Factory(
+                getActivity().getApplication(),
+                FirebaseAuth.getInstance().getCurrentUser().getUid()
+        );
+        viewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) factory).get(EmployeeViewModel.class);
+        viewModel.getEmployee().observe(getViewLifecycleOwner(), employeeEntity -> {
+            if (employeeEntity != null) {
+                employee = employeeEntity;
+            }
+        });
 
         //set all the labels with the infos of the user
-        binding.lblEmail.setText(myProfile.getEmail());
-        binding.lblFirstName.setText(myProfile.getFirstName());
-        binding.lblName.setText(myProfile.getName());
-        binding.lblNumber.setText(myProfile.getTelnumber());
+        binding.lblEmail.setText(employee.getEmail());
+        binding.lblFirstName.setText(employee.getFirstName());
+        binding.lblName.setText(employee.getName());
+        binding.lblNumber.setText(employee.getTelnumber());
 
 
         //when button "logout" is clicked
@@ -65,17 +81,17 @@ public class ProfileFragment extends Fragment {
 
                 //give all the user infos in argument
                 Bundle args = new Bundle();
-                args.putLong("id", myProfile.getId());
-                args.putString("username", myProfile.getUsername());
-                args.putString("password", myProfile.getPassword());
-                args.putString("email", myProfile.getEmail());
-                args.putString("firstname", myProfile.getFirstName());
-                args.putString("name", myProfile.getName());
-                args.putString("number", myProfile.getTelnumber());
-                args.putString("address", myProfile.getAddress());
-                args.putString("function", myProfile.getFunction());
-                args.putString("npa", myProfile.getNPA());
-                args.putBoolean("admin", myProfile.getAdmin());
+                args.putString("id", employee.getId());
+                args.putString("username", employee.getUsername());
+                args.putString("password", employee.getPassword());
+                args.putString("email", employee.getEmail());
+                args.putString("firstname", employee.getFirstName());
+                args.putString("name", employee.getName());
+                args.putString("number", employee.getTelnumber());
+                args.putString("address", employee.getAddress());
+                args.putString("function", employee.getFunction());
+                args.putString("npa", employee.getNPA());
+                args.putBoolean("admin", employee.getAdmin());
 
                 //change the fragment to Modify Employee
                 transaction.replace(R.id.nav_host_fragment_activity_main, ModifyEmployee.class, args);
@@ -90,7 +106,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View view) {
                 //open alert dialog to confirm choice<
                 MyAlertDialog ad = new MyAlertDialog(getContext(), "Delete account ? ", "are you sure you want to delete this account?", "delete");
-                ad.deleteAccount(myProfile, getActivity().getApplication());
+                ad.deleteAccount(employee, getActivity().getApplication());
             }
         });
         return root;

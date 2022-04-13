@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
 import baseapp.BaseApp;
-import database.async.employee.CreateEmployee;
-import database.dao.EmployeeDao;
 import database.entity.EmployeeEntity;
 import database.repository.EmployeeRepository;
 import util.OnAsyncEventListener;
@@ -32,8 +30,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private Toast toast;
 
     //variables declaration
-    private AppDataBase database;
-    private EmployeeDao employeeDao;
     private EmployeeRepository repository;
     private Button buttonRegister;
     private EditText Name, Firstname, Function, Telnumber, Email, Address, Username, Password, NPA;
@@ -44,7 +40,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-        database = AppDataBase.getInstance(this.getBaseContext());
 
         repository = ((BaseApp)getApplication()).getEmployeeRepository();
         buttonRegister = findViewById(R.id.modifyProfileButton);
@@ -109,7 +104,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         //Check email format and set email if is valid
         if(CheckConditions()){
 
-            new CreateEmployee(getApplication(), new OnAsyncEventListener() {
+            repository.insert(employee,new OnAsyncEventListener() {
 
                 @Override
                 public void onSuccess() {
@@ -121,7 +116,8 @@ public class CreateAccountActivity extends AppCompatActivity {
                     System.out.println("Le user ne s'est pas ajouté");
                     backLogin();
                 }
-            }).execute(employee);
+            });
+
             Toast.makeText(getApplicationContext(), "New account added to database", Toast.LENGTH_SHORT).show();
             backLogin();
 
@@ -204,7 +200,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     public boolean usernameTaken(String username)
     {
         AtomicBoolean isIn = new AtomicBoolean(false);
-        repository.getEmployee(username, getApplication()).observe(CreateAccountActivity.this, employeeEntity -> {
+        repository.getEmployee(username).observe(CreateAccountActivity.this, employeeEntity -> {
                     if (employeeEntity != null) {
                         isIn.set(false);
                     }

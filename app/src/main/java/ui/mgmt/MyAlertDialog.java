@@ -14,10 +14,10 @@ import androidx.room.Delete;
 
 import com.example.beaud_devanthery_timetracker.R;
 
-import database.async.employee.DeleteEmployee;
-import database.async.task.CreateTask;
+import baseapp.BaseApp;
 import database.entity.EmployeeEntity;
 import database.entity.TaskEntity;
+import database.repository.EmployeeRepository;
 import ui.mgmt.modifytask.ModifyTask;
 import util.OnAsyncEventListener;
 
@@ -27,6 +27,8 @@ public class MyAlertDialog {
     String dialogYesBtn, dialogNoBtn = "Cancel";
     Context context;
     AlertDialog.Builder myAlert;
+
+    private EmployeeRepository repository;
 
 
     //constructor with all the text that will be displayes
@@ -76,7 +78,7 @@ public class MyAlertDialog {
             arguments.putString("date", taskEntity.getDate());
             arguments.putInt("start", taskEntity.getStartTime());
             arguments.putInt("end", taskEntity.getEndTime());
-            arguments.putLong("idTask", taskEntity.getId());
+            arguments.putString("idTask", taskEntity.getId());
 
 
             FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -97,8 +99,8 @@ public class MyAlertDialog {
             SharedPreferences.Editor editor = context.getSharedPreferences(MainActivity.PREFS_NAME, 0).edit();
             editor.remove(MainActivity.PREFS_USER);
             editor.apply();
-
-            new DeleteEmployee(application, new OnAsyncEventListener() {
+            EmployeeRepository repository = ((BaseApp)application).getEmployeeRepository();
+            repository.delete(employee,new OnAsyncEventListener() {
 
                 @Override
                 public void onSuccess() {
@@ -109,7 +111,8 @@ public class MyAlertDialog {
                 public void onFailure(Exception e) {
                     System.out.println("L'employé n'a pas été supprimé");
                 }
-            }).execute(employee);
+            });
+
 
             Intent intent = new Intent(context, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

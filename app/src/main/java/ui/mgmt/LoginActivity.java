@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+
     }
 
     //Button back to register page
@@ -109,7 +110,8 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         }else{
             String finalEncryptedPassword = encryptedPassword;
-            repository.getEmployee(stUsername, getApplication()).observe(LoginActivity.this, employeeEntity -> {
+
+            repository.getEmployee(stUsername).observe(LoginActivity.this, employeeEntity -> {
                 if (employeeEntity != null) {
                     if (employeeEntity.getPassword().equals(finalEncryptedPassword)) {
                         SharedPreferences.Editor editor = getSharedPreferences(MainActivity.PREFS_NAME, 0).edit();
