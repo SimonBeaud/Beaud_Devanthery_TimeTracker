@@ -17,9 +17,12 @@ import android.view.ViewGroup;
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.FragmentProfileBinding;
 import com.example.beaud_devanthery_timetracker.databinding.ModifyEmployeeFragmentBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
-import database.async.employee.UpdateEmployee;
+import baseapp.BaseApp;
 import database.entity.EmployeeEntity;
+import database.repository.EmployeeRepository;
+import database.repository.TaskRepository;
 import ui.mgmt.LoginActivity;
 import ui.mgmt.history.HistoryFragment;
 import ui.mgmt.profile.ProfileFragment;
@@ -28,18 +31,23 @@ import util.OnAsyncEventListener;
 public class ModifyEmployee extends Fragment {
 
     private ModifyEmployeeFragmentBinding binding;
+    private EmployeeRepository repository;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
+        repository = ((BaseApp) getActivity().getApplication()).getEmployeeRepository();
+
         //link with the xml file view
+
         binding = ModifyEmployeeFragmentBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         //get the arguments that were sent in input
         Bundle arguments = getArguments();
-        long id = (long)arguments.get("id");
+        String id = (String)arguments.get("id");
         String username = (String)arguments.get("username");
         //String password = (String)arguments.get("password");
         String email = (String)arguments.get("email");
@@ -82,11 +90,22 @@ public class ModifyEmployee extends Fragment {
                 employee.setNPA(binding.createAccountNpa.getText().toString());
                 employee.setAdmin(admin);
 
+                //////////////////////////////////////////////
+                //////////////////////////////////////////////
+                //////////////////////////////////////////////
+
+                // maybe not useful anymore with firebase
+
+
                 //change the logged employee values to keep them correct
-                LoginActivity.LOGGED_EMPLOYEE = employee;
+
+//                LoginActivity.LOGGED_EMPLOYEE = employee;
+
+
+
 
                 //modify in db
-                new UpdateEmployee(getActivity().getApplication(), new OnAsyncEventListener() {
+                repository.update(employee, new OnAsyncEventListener() {
                     @Override
                     public void onSuccess() {
                         Log.i("UpdateEmployee","sucessful");
@@ -97,7 +116,7 @@ public class ModifyEmployee extends Fragment {
                         Log.w("UpdateEmployee","failed");
 
                     }
-                }).execute(employee);
+                });
 
                 switchToProfile();
 

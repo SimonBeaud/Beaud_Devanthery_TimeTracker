@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 
 import com.example.beaud_devanthery_timetracker.databinding.FragmentCreatetaskBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -94,7 +95,10 @@ public class CreateTaskFragment extends Fragment {
                     Date today = Calendar.getInstance().getTime();
                     String myDate =String.format("%02d.%02d.%04d", today.getDate() , today.getMonth()+1 , today.getYear()+1900);
                     newTask.setDate(myDate);
-                    newTask.setIdEmployee(LoginActivity.LOGGED_EMPLOYEE.getId());
+
+
+                    /// instead of using a static variable
+                    newTask.setIdEmployee(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
 
 
