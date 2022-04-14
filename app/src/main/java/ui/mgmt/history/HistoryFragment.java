@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.FragmentHistoryBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,17 +68,24 @@ public class HistoryFragment extends Fragment {
 
 
         myListOfTasks = new ArrayList<>();
-        myAdapter = new TaskAdapter(getActivity().getBaseContext(),R.layout.history_task_fragment,myListOfTasks,inflater,getActivity().getApplication(),root.getContext(),getParentFragmentManager());
-        list.setAdapter(myAdapter);
+
         TaskListViewModel.Factory factory = new TaskListViewModel.Factory(
                 getActivity().getApplication(), FirebaseAuth.getInstance().getCurrentUser().getUid());
         viewModel = new ViewModelProvider(this, (ViewModelProvider.Factory) factory).get(TaskListViewModel.class);
         viewModel.getOwnTasks().observe(getViewLifecycleOwner(), taskEntities -> {
             if (taskEntities != null) {
+
                 myListOfTasks = taskEntities;
+                for(int i=0;i<myListOfTasks.size();i++)
+                {
+                    System.out.println(myListOfTasks.get(i).getTaskname());
+                }
 //                myAdapter.setData(myListOfTasks);
                 //perhaps it is this ?
+                myAdapter = new TaskAdapter(getActivity().getBaseContext(),R.layout.history_task_fragment,myListOfTasks,inflater,getActivity().getApplication(),root.getContext(),getParentFragmentManager());
                 list.setAdapter(myAdapter);
+//                list.setAdapter(myAdapter);
+                System.out.println("FINISHING NOT NULL");
 
 
                 ///////////////////////////////////////////////////////////////
@@ -87,7 +95,13 @@ public class HistoryFragment extends Fragment {
 
                 ///////////////////////////////////////////////////////////////
                 ///////////////////////////////////////////////////////////////
-            }});
+            }
+
+        });
+        for(int i=0;i<myListOfTasks.size();i++)
+        {
+            System.out.println(myListOfTasks.get(i).getTaskname());
+        }
 
 
 

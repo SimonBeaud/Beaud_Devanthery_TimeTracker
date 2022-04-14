@@ -113,11 +113,11 @@ public class TaskEntity {
         HashMap<String, Object> result = new HashMap<>();
 
 
-        result.put("Taskname", Taskname);
-        result.put("Description", Description);
-        result.put("StartTime", StartTime);
-        result.put("EndTime", EndTime);
-        result.put("Date", Date);
+        result.put("taskname", Taskname);
+        result.put("description", Description);
+        result.put("startTime", StartTime);
+        result.put("endTime", EndTime);
+        result.put("date", Date);
         result.put("idEmployee", idEmployee);
 
 

@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -47,7 +48,8 @@ public class TaskRepository {
 
     public LiveData<TaskEntity> getTask(final String taskId){
         DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference("tasks")
+                .getReference("employees").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("tasks")
                 .child(taskId);
 
         return new TaskLiveData(reference);
@@ -56,27 +58,23 @@ public class TaskRepository {
 
     public LiveData<List<TaskEntity>> getTasks(){
         DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference("tasks");
+                .getReference("employees")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("tasks");
 
         return new TaskListLiveData(reference);
     }
 
-    public LiveData<List<TaskEntity>> getTasksOfEmployee( String employeeId){
-        DatabaseReference reference = FirebaseDatabase.getInstance()
-                .getReference("tasks");
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-        //modify to have only the tasks of one employee
-        return new TaskListLiveData(reference);
 
-    }
 
     //Insertion d'un employée
     public void insert(final TaskEntity task, OnAsyncEventListener callback){
-        String id = FirebaseDatabase.getInstance().getReference("tasks").push().getKey();
-        FirebaseDatabase.getInstance().getReference("tasks")
+        String id = FirebaseDatabase.getInstance().getReference("employees").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("tasks").push().getKey();
+        FirebaseDatabase.getInstance().getReference("employees")
+                .child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid())
+                .child("tasks")
                 .child(id)
                 .setValue(task, (databaseError,databaseReference)->{
                     if(databaseError!= null) {
@@ -92,6 +90,9 @@ public class TaskRepository {
     //Delete d'un employée
     public void delete(final TaskEntity task, OnAsyncEventListener callback){
         FirebaseDatabase.getInstance().getReference("employees")
+                .child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid())
+                .child("tasks")
                 .child(task.getId())
                 .removeValue((databaseError,databaseReference)-> {
                     if(databaseError!= null)
@@ -106,7 +107,11 @@ public class TaskRepository {
 
     //Update d'un employée
     public void update(final TaskEntity task, OnAsyncEventListener callback){
-        FirebaseDatabase.getInstance().getReference("employees").child(task.getId())
+        FirebaseDatabase.getInstance().getReference("employees")
+                .child(FirebaseAuth.getInstance().getCurrentUser()
+                        .getUid())
+                .child("tasks")
+                .child(task.getId())
                 .updateChildren(task.toMap(),(databaseError,databaseReference)-> {
                     if(databaseError!= null)
                     {

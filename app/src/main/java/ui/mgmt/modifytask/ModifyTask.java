@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.example.beaud_devanthery_timetracker.R;
 import com.example.beaud_devanthery_timetracker.databinding.ModifyTaskFragmentBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 import baseapp.BaseApp;
 import database.entity.TaskEntity;
@@ -91,7 +92,7 @@ public class ModifyTask extends Fragment {
 
 
                 //create new task entity , with the same id as the one we are modifying
-                TaskEntity task = new TaskEntity(title,description,startInt,endInt,date, LoginActivity.LOGGED_EMPLOYEE.getId());
+                TaskEntity task = new TaskEntity(title,description,startInt,endInt,date, FirebaseAuth.getInstance().getCurrentUser().getUid());
                 task.setId(id);
 
 

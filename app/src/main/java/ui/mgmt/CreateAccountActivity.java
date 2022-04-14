@@ -203,16 +203,16 @@ public class CreateAccountActivity extends AppCompatActivity {
     public boolean usernameTaken(String username)
     {
         AtomicBoolean isIn = new AtomicBoolean(false);
-        repository.getEmployee(username).observe(CreateAccountActivity.this, employeeEntity -> {
-                    if (employeeEntity != null) {
-                        isIn.set(false);
-                    }
-                    else
-                    {
-                        isIn.set(true);
-                    }
-        }
-        );
+//        repository.getEmployee(username).observe(CreateAccountActivity.this, employeeEntity -> {
+//                    if (employeeEntity != null) {
+//                        isIn.set(false);
+//                    }
+//                    else
+//                    {
+//                        isIn.set(true);
+//                    }
+//        }
+//        );
         return isIn.get();
     }
 
