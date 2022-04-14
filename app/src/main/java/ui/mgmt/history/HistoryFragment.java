@@ -75,9 +75,7 @@ public class HistoryFragment extends Fragment {
         viewModel.getOwnTasks().observe(getViewLifecycleOwner(), taskEntities -> {
             if (taskEntities != null) {
                 myListOfTasks = taskEntities;
-
 //                myAdapter.setData(myListOfTasks);
-
                 //perhaps it is this ?
                 list.setAdapter(myAdapter);
 

@@ -90,20 +90,6 @@ public class ModifyEmployee extends Fragment {
                 employee.setNPA(binding.createAccountNpa.getText().toString());
                 employee.setAdmin(admin);
 
-                //////////////////////////////////////////////
-                //////////////////////////////////////////////
-                //////////////////////////////////////////////
-
-                // maybe not useful anymore with firebase
-
-
-                //change the logged employee values to keep them correct
-
-//                LoginActivity.LOGGED_EMPLOYEE = employee;
-
-
-
-
                 //modify in db
                 repository.update(employee, new OnAsyncEventListener() {
                     @Override
@@ -117,6 +103,9 @@ public class ModifyEmployee extends Fragment {
 
                     }
                 });
+
+                //modify auth
+                FirebaseAuth.getInstance().getCurrentUser().updateEmail(employee.getEmail());
 
                 switchToProfile();
 

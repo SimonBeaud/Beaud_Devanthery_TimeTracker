@@ -48,14 +48,15 @@ public class ProfileFragment extends Fragment {
         viewModel.getEmployee().observe(getViewLifecycleOwner(), employeeEntity -> {
             if (employeeEntity != null) {
                 employee = employeeEntity;
+                //set all the labels with the infos of the user
+                binding.lblEmail.setText(employee.getEmail());
+                binding.lblFirstName.setText(employee.getFirstName());
+                binding.lblName.setText(employee.getName());
+                binding.lblNumber.setText(employee.getTelnumber());
             }
         });
 
-        //set all the labels with the infos of the user
-        binding.lblEmail.setText(employee.getEmail());
-        binding.lblFirstName.setText(employee.getFirstName());
-        binding.lblName.setText(employee.getName());
-        binding.lblNumber.setText(employee.getTelnumber());
+
 
 
         //when button "logout" is clicked

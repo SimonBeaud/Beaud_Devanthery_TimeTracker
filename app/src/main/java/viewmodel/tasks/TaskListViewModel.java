@@ -41,7 +41,7 @@ public class TaskListViewModel extends AndroidViewModel {
         mObservableTasks.setValue(null);
 
         LiveData<List<EmployeeWithTask>> employeeTasks = employeeRepository.getOtherEmployeesWithTasks(ownerId);
-        LiveData<List<TaskEntity>> ownTasks = mRepository.getTasksOfEmployee(ownerId);
+        LiveData<List<TaskEntity>> ownTasks = mRepository.getTasks();
 
         // observe the changes of the entities from the database and forward them
         mObservableEmployeeTasks.addSource(employeeTasks, mObservableEmployeeTasks::setValue);

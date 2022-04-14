@@ -114,6 +114,8 @@ public class EmployeeRepository {
                         callback.onSuccess();
                     }
                 });
+
+        FirebaseAuth.getInstance().getCurrentUser().delete();
     }
 
     /////////////////////////////////////////////////////////////////
